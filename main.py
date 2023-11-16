@@ -26,14 +26,6 @@ class Phone(Field):
         else:
             raise ValueError
 
-    def __init__(self, value):
-        super().__init__(value)
-        try:
-            self.validate()
-        except ValueError as e:
-            print(f"Error: {e}")
-            self.value = None  # Якщо валідація не пройшла, встановлюємо value в None
-
 class Record:
     def __init__(self, name):
         self.name = Name(name)
