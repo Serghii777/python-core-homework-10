@@ -17,11 +17,14 @@ class Name(Field):
         super().__init__(value)
 
 class Phone(Field):
-    def validate(self):
-        if len(self.value) != 10:
-            ValueError('Phone should be 10 symbols')
-        elif not self.value.isdigit():
-            ValueError('Phone should be 10 symbols')
+    def validate(self, phone):
+        return len(phone) == 10 and phone.isdigit()
+
+    def __init__(self, value):
+        if self.validate(value):
+            super().__init__(value)
+        else:
+            raise ValueError
 
     def __init__(self, value):
         super().__init__(value)
