@@ -1,8 +1,5 @@
 from collections import UserDict
 
-class IDException(Exception):
-    pass
-
 class Field:
     def __init__(self, value):
         self.value = value
@@ -31,30 +28,29 @@ class Record:
         self.name = Name(name)
         self.phones = []
 
-    def add_phone(self, phone):
-        if phone is not None:
-            new_phone = Phone(phone)
-            new_phone.validate(phone)
-            if new_phone.value in self.phones:
-                self.phones.append(new_phone)
+    def add_phone(self, phone_number: str):
+        phone = Phone(phone_number)
+        phone.validate(phone_number)
+        if phone not in self.phones:
+            self.phones.append(phone)
 
     def remove_phone(self, phone):
-        if any(p.value == phone for p in self.phones):
-            self.phones = [p for p in self.phones if p.value != phone]
-        else:
-            raise ValueError(f"Phone {phone} not found in record.")
-
+        for p in self.phones:
+            if p.value == phone:
+                self.phones.remove(p)
+    
     def edit_phone(self, old_phone, new_phone):
-        if any(p.value == old_phone for p in self.phones):
-            self.remove_phone(old_phone)
-            self.add_phone(new_phone)
-        else:
+        for p in self.phones:
+            if p.value == old_phone:
+                self.remove_phone(old_phone)
+                self.add_phone(new_phone)
+                return 
             raise ValueError(f"Phone {old_phone} not found in record.")
 
     def find_phone(self, phone):
         for p in self.phones:
             if p.value == phone:
-                return p.value
+                return p
         return None
 
     def __str__(self):
@@ -73,4 +69,3 @@ class AddressBook(UserDict):
     def delete(self, name):
         if name in self.data:
             del self.data[name]
-
